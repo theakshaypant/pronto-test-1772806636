@@ -1,0 +1,23 @@
+name: PROnto
+
+on:
+  pull_request:
+    types: [labeled, closed]
+  issues:
+    types: [opened, edited, labeled, closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  pronto:
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+      github.event_name == 'issues'
+    steps:
+      - uses: docker://ghcr.io/theakshaypant/pronto:latest
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
